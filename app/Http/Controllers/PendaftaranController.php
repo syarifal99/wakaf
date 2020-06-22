@@ -61,9 +61,14 @@ class PendaftaranController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Pendaftaran $pendaftaran)
     {
-        //
+        //$pendaftaran = Pendaftaran::with(['kategori', 'label', 'kota.provinsi'])->findOrFail($id);
+        $provinsi = Provinsi::all();
+        $kategori = Kategori::all();
+        $label = Label::all();
+        $kota = Kota::all();
+        return view('pendaftaran.edit', compact('provinsi','kategori', 'label', 'kota', 'pendaftaran'));
     }
 
     /**
@@ -75,7 +80,20 @@ class PendaftaranController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $pendaftaran = Pendaftaran::with(['kategori', 'label', 'kota.provinsi'])->findOrFail($id);
+        Pendaftaran::where('id_pendaftaran', $pendaftaran->id_pendaftaran)
+            ->update([
+                'nm_pendaftaran' => $request->nm_pendaftaran,
+                'nm_produk' => $request->nm_produk,
+                'id_kategori' => $request->id_kategori,
+                'id_label' => $request->id_label,
+                'nominal' => $request->nominal,
+                'tenggat_waktu' => $request->tenggat_waktu,
+                'id_kota' => $request->id_kota,
+                'status' => $request->status,
+                'gambar' => $request->gambar
+            ]);
+            return redirect('/pendaftaran')->with('status','Data Pendaftaran Project Berhasil Diubah !');
     }
 
     /**
@@ -84,8 +102,10 @@ class PendaftaranController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Pendaftaran $pendaftaran)
     {
-        //
+        pendaftaran::destroy($pendaftaran->id_pendaftaran);
+        return redirect('/pendaftaran')->with('status','Data Pendaftaran Berhasil Dihapus !');
+    
     }
 }

@@ -35,5 +35,11 @@ Route::get('/pendaftaran/{id}', 'PendaftaranController@show');
 Route::post('/pendaftaran', 'PendaftaranController@store');
 Route::delete('/pendaftaran/{pendaftaran}', 'PendaftaranController@destroy');
 Route::get('/pendaftaran/{pendaftaran}/edit', 'PendaftaranController@edit');
+Route::patch('/pendaftaran/{pendaftaran}', 'PendaftaranController@update');
+
+Route::get('/validasi', 'ValidasiController@index');
+Route::get('/validasi/create', 'ValidasiController@create');
+Route::get('/validasi/{id}', 'ValidasiController@show');
+Route::post('/validasi', 'ValidasiController@store');
 
 Route::get('/kota','KotaController@show')->name('kota.show');

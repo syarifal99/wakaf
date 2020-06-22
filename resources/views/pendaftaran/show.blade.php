@@ -10,7 +10,6 @@
                 
             <div class="card">
                 <div class="card-body">
-                    <img src="..." class="card-img-top" alt="...">
                     <h5 class="card-title">Nama Pendaftaran: {{ $pendaftaran->nm_pendaftaran }}</h5>
                     <p class="card-text">Nama Produk :  {{ $pendaftaran->nm_produk }}</p>
                     <p class="card-text">Kategori :     {{ $pendaftaran->kategori->kategori }}</p>

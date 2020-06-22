@@ -45,7 +45,7 @@
             <div class="form-group">
                 <label for="Provinsi">Provinsi</label>
                 <select class="form-control" id="Provinsi" name="provinsi">
-                <option disabled value="">-- Pilih Provinsi --</option>
+                <option value="">-- Pilih Provinsi --</option>
                 @foreach ($provinsi as $p)
                 <option value="{{$p->id_provinsi}}">{{$p->provinsi}}</option>
                 @endforeach 
