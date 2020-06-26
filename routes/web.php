@@ -21,13 +21,14 @@
 
 Route::get('/', 'PagesController@home');
 
-Route::get('/mitra', 'MitraController@index');
-Route::get('/mitra/create', 'MitraController@create');
-Route::get('/mitra/{mitra}', 'MitraController@show');
-Route::post('/mitra', 'MitraController@store');
-Route::delete('/mitra/{mitra}', 'MitraController@destroy');
-Route::get('/mitra/{mitra}/edit', 'MitraController@edit');
-Route::patch('/mitra/{mitra}', 'MitraController@update');
+//admin daftar mitra
+Route::put('/upload/update/{id}', 'MitraController@update');
+Route::get('/upload', 'MitraController@upload');
+Route::get('/tambah', 'MitraController@create');
+Route::get('/upload/{id}', 'MitraController@detail');
+Route::post('/upload/proses', 'MitraController@proses_upload');
+Route::get('/upload/hapus/{id}', 'MitraController@destroy');
+Route::get('/upload/edit/{id}','MitraController@edit');
 
 Route::get('/pendaftaran', 'PendaftaranController@index');
 Route::get('/pendaftaran/create', 'PendaftaranController@create');
