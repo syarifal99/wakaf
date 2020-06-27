@@ -25,10 +25,21 @@ Route::get('/', 'PagesController@home');
 Route::put('/upload/update/{id}', 'MitraController@update');
 Route::get('/upload', 'MitraController@upload');
 Route::get('/tambah', 'MitraController@create');
-Route::get('/upload/{id}', 'MitraController@detail');
-Route::post('/upload/proses', 'MitraController@proses_upload');
+Route::get('/upload/{id}', 'MitraController@show');
+Route::post('/upload/proses', 'MitraController@store');
 Route::get('/upload/hapus/{id}', 'MitraController@destroy');
 Route::get('/upload/edit/{id}','MitraController@edit');
+
+//Gabungan front end + back end
+Route::get('/PendaftaranMitra','MitraController2@upload');
+Route::get('/TambahMitra', 'MitraController2@create');
+Route::post('/TambahMitra/proses', 'MitraController2@store');
+Route::get('/Mitra/hapus/{id}', 'MitraController2@destroy');
+
+Route::put('/Mitra/update/{id}', 'MitraController2@update');
+Route::get('/upload', 'MitraController2@upload');
+Route::get('/Mitra/detail/{id}', 'MitraController2@show');
+Route::get('/Mitra/edit/{id}','MitraController2@edit');
 
 Route::get('/pendaftaran', 'PendaftaranController@index');
 Route::get('/pendaftaran/create', 'PendaftaranController@create');
