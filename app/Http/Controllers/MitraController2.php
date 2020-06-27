@@ -22,13 +22,13 @@ class MitraController2 extends Controller
 		$gambar = Mitra::get();
 		return view('/admin/dataMitra',['gambar' => $gambar]);
     }
-    public function detail($id){
+    public function show($id){
 		$gambar = Mitra::where('id_mitra', $id)->first();
 		return view('/admin/detailMitra', array(
 			'gambar' => $gambar
 		  ));
 	}
-	public function proses_upload(Request $request){
+	public function store(Request $request){
 		$this->validate($request, [
             'nm_mitra' => 'required',
             'nm_pjmitra' => 'required',

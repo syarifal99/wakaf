@@ -1,114 +1,112 @@
 <?php
 
 namespace App\Http\Controllers;
-use Illuminate\Support\Facades\DB;
+
 use Illuminate\Http\Request;
+
 use App\Mitra;
+use File;
 
 class MitraController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        $mitra = DB::table('mitra')->get();
-        //$mitra = Mitra::all();
-        return view('mitra.index', ['mitra' => $mitra]);
+    public function home(){
+		
+		return view('index');
     }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        return view('mitra.create');
+    public function create(){
+		
+		return view('tambah');
     }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        // $mitra = new Mitra;
-        // $mitra->nm_mitra = $request->nm_mitra;
-        // $mitra->nm_pjmitra = $request->nm_pjmitra;
-        // $mitra->no_rek = $request->no_rek;
-        // $mitra->username = $request->username;
-        // $mitra->email = $request->email;
-        // $mitra->password = $request->password;
-        // $mitra->no_hp = $request->no_hp;
-        // $mitra->logo_mitra = $request->logo_mitra;
-
-        // $mitra->save();
-        Mitra::create($request->all());
-        return redirect('/mitra')->with('status','Data Mitra Berhasil Ditambahkan !');
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Mitra $mitra)
-    {
-        //$mitra = Mitra::all();
-        //$mitra = DB::table('mitra')->get($id_mitra);
-        return view('mitra.show', compact('mitra'));
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(mitra $mitra)
-    {
-        return view('mitra.edit', compact('mitra'));
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Mitra $mitra)
-    {
-        Mitra::where('id_mitra', $mitra->id_mitra)
-            ->update([
-                'nm_mitra' => $request->nm_mitra,
-                'nm_pjmitra' => $request->nm_pjmitra,
-                'no_rek' => $request->no_rek,
-                'username' => $request->username,
-                'email' => $request->email,
-                'password' => $request->password,
-                'no_hp' => $request->no_hp,
-                'logo_mitra' => $request->logo_mitra
-            ]);
-            return redirect('/mitra')->with('status','Data Mitra Berhasil Diubah !');
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Mitra $mitra)
-    {
-        mitra::destroy($mitra->id_mitra);
-        return redirect('/mitra')->with('status','Data Mitra Berhasil Dihapus !');
     
+	public function upload(){
+		$gambar = Mitra::get();
+		return view('upload',['gambar' => $gambar]);
     }
+    public function detail($id){
+		$gambar = Mitra::where('id_mitra', $id)->first();
+		return view('detail', array(
+			'gambar' => $gambar
+		  ));
+	}
+	public function proses_upload(Request $request){
+		$this->validate($request, [
+            'nm_mitra' => 'required',
+            'nm_pjmitra' => 'required',
+            'no_rek' => 'required',
+            'username' => 'required',
+            'email' => 'required',
+            'password' => 'required',
+            'no_hp' => 'required',
+			'logo_mitra' => 'required|file|image|mimes:jpeg,png,jpg|max:2048',
+		]);
+
+		// menyimpan data file yang diupload ke variabel $file
+		$file = $request->file('logo_mitra');
+
+		$nama_file = time()."_".$file->getClientOriginalExtension();
+
+      	        // isi dengan nama folder tempat kemana file diupload
+		$tujuan_upload = 'data_file';
+		$file->move($tujuan_upload,$nama_file);
+
+		Mitra::create([
+            'nm_mitra' => $request->nm_mitra,
+            'nm_pjmitra' => $request->nm_pjmitra,
+            'no_rek' => $request->no_rek,
+            'username' => $request->username,
+            'email' => $request->email,
+            'password' => $request->password,
+            'no_hp' => $request->no_hp,
+			'logo_mitra' => $nama_file,
+		]);
+
+		$gambar = Mitra::get();
+		return view('upload',['gambar' => $gambar]);
+	}
+
+	public function destroy($id)
+    {
+		// hapus file
+		$gambar = Mitra::where('id_mitra',$id)->first();
+		File::delete('data_file/'.$gambar->file);
+ 
+		// hapus data
+		Mitra::where('id_mitra',$id)->delete();
+ 
+		return redirect('upload');
+	}
+	
+	public function edit($id)
+    {
+		$gambar=Mitra::find($id);
+		return view('edit',['gambar' => $gambar]);
+		// var_dump($gambar);
+	}
+
+	public function update(Request $request, $id)
+	{
+		$gambar=Mitra::find($id);
+		
+		$gambar->nm_mitra = $request-> input('nm_mitra');
+		$gambar->nm_pjmitra = $request->input('nm_pjmitra');
+		$gambar->no_rek = $request->input('no_rek');
+		$gambar->username = $request->input('username');
+		$gambar->email = $request->input('email');
+		$gambar->password = $request->input('password');
+		$gambar->no_hp = $request->input('no_hp');
+		
+		if($request->file('logo_mitra')){
+			$file = $request->file('logo_mitra');
+			$nama_file = time()."_".$file->getClientOriginalExtension();
+			$tujuan_upload = 'data_file';
+			$file->move($tujuan_upload,$nama_file);
+			$gambar->logo_mitra = $nama_file;
+		}
+
+		$gambar->save();
+		return redirect ('/upload/')->with('gambar',$gambar);
+		
+    }
+
+
 }
